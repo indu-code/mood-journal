@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MY MOOD JOURNAL</title>
+  <link rel="stylesheet" href="styles.css" />
+</head> 
+<body>
+  <header class="site-header">
+  <h1>MY MOOD JOURNAL</h1>
+  </header>
+   
+  <section class="date-section">
+    <p id="dateDisplay">Loading today's date...</p>
+  </section>
+
+  <section class="mood-section">
+    <p class="section-title">How are you feeling today?</p>
+    <div class="mood-button">
+       <button class="mood-btn" data-mood="😊">😊 Happy</button>
+      <button class="mood-btn" data-mood="😢">😢 Sad</button>
+      <button class="mood-btn" data-mood="😠">😠 Angry</button>
+      <button class="mood-btn" data-mood="😴">😴 Tired</button>
+      <button class="mood-btn" data-mood="🤩">🤩 Excited</button>
+    </div>
+  </section>  
+
+<div class="journal-entry">
+  <h2>Your Journal</h2>
+  <textarea id="journalText" placeholder="Write about your day here..."></textarea>
+  <br />
+  <button onclick="saveJournal()">Save Entry</button>
+</div>
+
+
+  <section class="output-section>
+    <div id="outputEntry"></div>
+  </section>
+
+  
+  <footer class="site-footer">
+    <p>Made with 💕 by Me | &copy; 2025 Mood Journal</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+<div class="special-section">
+  <h2 id="dailyQuote">🌸 Daily Quote Loading...</h2>
+  <p class="closing-message">💖 You did your best today. Be proud of yourself! 💖</p>
+  <div class="sparkles">✨ ✨ ✨</div>
+</div>
+
+</html>
+
+
+    
