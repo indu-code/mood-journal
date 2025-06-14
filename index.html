@@ -1,55 +1,213 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MY MOOD JOURNAL</title>
-  <link rel="stylesheet" href="styles.css" />
-</head> 
+  <title>My Dreamy Mood Journal</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #ffd6f5, #fff0f5);
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffcce6;
+      box-shadow: 0 2px 5px #e6b8d1;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      color: #cc0066;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .entry-form {
+      background-color: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(204, 0, 102, 0.2);
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-weight: bold;
+      color: #cc0066;
+    }
+
+    select,
+    textarea,
+    button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #cc0066;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #ffb3d9;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #cc0066;
+    }
+
+    .entries {
+      background-color: #ffe6f2;
+      padding: 20px;
+      border-radius: 15px;
+    }
+
+    .entry {
+      margin-bottom: 20px;
+      padding: 15px;
+      border-left: 5px solid #cc0066;
+      background-color: #fff0f5;
+      border-radius: 10px;
+    }
+
+    .hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: url('https://cdn-icons-png.flaticon.com/512/833/833472.png') no-repeat center center / contain;
+      animation: float 10s infinite;
+      opacity: 0.3;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(-100vh);
+        opacity: 1;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+
+      textarea {
+        height: 150px;
+      }
+    }
+  </style>
+</head>
+
 <body>
-  <header class="site-header">
-  <h1>MY MOOD JOURNAL</h1>
+  <header>
+    <h1>My Dreamy Mood Journal 💖</h1>
   </header>
-   
-  <section class="date-section">
-    <p id="dateDisplay">Loading today's date...</p>
-  </section>
 
-  <section class="mood-section">
-    <p class="section-title">How are you feeling today?</p>
-    <div class="mood-button">
-       <button class="mood-btn" data-mood="😊">😊 Happy</button>
-      <button class="mood-btn" data-mood="😢">😢 Sad</button>
-      <button class="mood-btn" data-mood="😠">😠 Angry</button>
-      <button class="mood-btn" data-mood="😴">😴 Tired</button>
-      <button class="mood-btn" data-mood="🤩">🤩 Excited</button>
+  <div class="container">
+    <div class="entry-form">
+      <label for="date">Date:</label>
+      <input type="date" id="date" />
+
+      <label for="mood" style="display: block; margin-top: 15px;">Mood:</label>
+      <select id="mood">
+        <option value="😊 Happy">😊 Happy</option>
+        <option value="😢 Sad">😢 Sad</option>
+        <option value="😡 Angry">😡 Angry</option>
+        <option value="😌 Calm">😌 Calm</option>
+        <option value="🤩 Excited">🤩 Excited</option>
+        <option value="😴 Tired">😴 Tired</option>
+        <option value="❤️ Loved">❤️ Loved</option>
+        <option value="💭 Thoughtful">💭 Thoughtful</option>
+      </select>
+
+      <label for="entry">Your Journal:</label>
+      <textarea id="entry" rows="6" placeholder="Write your feelings here..."></textarea>
+
+      <button onclick="saveEntry()">Save Entry</button>
     </div>
-  </section>  
 
-<div class="journal-entry">
-  <h2>Your Journal</h2>
-  <textarea id="journalText" placeholder="Write about your day here..."></textarea>
-  <br />
-  <button onclick="saveJournal()">Save Entry</button>
-</div>
+    <div class="entries">
+      <h2>💌 Past Entries</h2>
+      <div id="entryList"></div>
+    </div>
+  </div>
 
+  <div class="hearts"></div>
 
-  <section class="output-section>
-    <div id="outputEntry"></div>
-  </section>
+  <script>
+    function saveEntry() {
+      const date = document.getElementById('date').value;
+      const mood = document.getElementById('mood').value;
+      const text = document.getElementById('entry').value;
 
-  
-  <footer class="site-footer">
-    <p>Made with 💕 by Me | &copy; 2025 Mood Journal</p>
-  </footer>
+      if (!date || !text) {
+        alert('Please enter a date and your journal entry.');
+        return;
+      }
 
-  <script src="script.js"></script>
+      const entry = { date, mood, text };
+      const entries = JSON.parse(localStorage.getItem('moodEntries') || '[]');
+      entries.unshift(entry);
+      localStorage.setItem('moodEntries', JSON.stringify(entries));
+      renderEntries();
+      document.getElementById('entry').value = '';
+    }
+
+    function renderEntries() {
+      const entryList = document.getElementById('entryList');
+      entryList.innerHTML = '';
+      const entries = JSON.parse(localStorage.getItem('moodEntries') || '[]');
+
+      entries.forEach(entry => {
+        const div = document.createElement('div');
+        div.className = 'entry';
+        div.innerHTML = `<strong>${entry.date}</strong> - ${entry.mood}<br>${entry.text}`;
+        entryList.appendChild(div);
+      });
+    }
+
+    function createHearts(count = 20) {
+      const heartContainer = document.querySelector('.hearts');
+      for (let i = 0; i < count; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.top = Math.random() * 100 + 'vh';
+        heartContainer.appendChild(heart);
+      }
+    }
+
+    createHearts();
+    renderEntries();
+  </script>
 </body>
-<div class="special-section">
-  <h2 id="dailyQuote">🌸 Daily Quote Loading...</h2>
-  <p class="closing-message">💖 You did your best today. Be proud of yourself! 💖</p>
-  <div class="sparkles">✨ ✨ ✨</div>
-</div>
 
 </html>
 
